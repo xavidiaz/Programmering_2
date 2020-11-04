@@ -39,7 +39,6 @@ public class fem {
         String str = "Hello";
         BufferedWriter writer = new BufferedWriter(new FileWriter("Hello.txt"));
         writer.write(str);
-
         writer.close();
     }
 
