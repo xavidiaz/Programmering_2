@@ -4,150 +4,148 @@ import javax.swing.*;
 import java.util.ArrayList;
 
 public class Main {
+    // Fönster rubrik
+    static String rubrik = "kortspel Tjugoett";
+
+    // total poäng
+    static int total = 0; // spelare
+    static int totalHuset = 0; //  huset
+
+    static int varv = 0; // räkna varv.
+
+    // Närvarade kortet
+    static String nkortet = ""; // spelare
+    static String nHuskortet = ""; // huset
+
+    // källa ico image
+    static ImageIcon icon = new ImageIcon("src/B_Uppgift/blackjack-card.jpg");
+
+    // Initiera Objekt Deck
+    static Deck    deck = new Deck();
+
+    // Kortet Array
+    static ArrayList <Card> kort = new ArrayList<Card>(); // Spelare
+    static ArrayList <Card> kortHuset = new ArrayList<Card>(); // Huset
+
+    // KÖRNING
     public static void main(String[] args){
-        // Rubrik
-        String rubrik = "kortspel Tjugoett";
 
-        // Initiera Objekt Deck
-        Deck    deck = new Deck();
-
-        // Kortet Array spelare
-        ArrayList <Card> kort = new ArrayList<Card>();
-        int varv = 0; // räkna varv.
-        int total = 0; // summa av kortet
-
-        // Kortet Array hem
-        ArrayList <Card> kortHem = new ArrayList<Card>();
-        int totalHem = 0; // summa av kortet hem
-
-        // String med närvarande kortet
-        String nkortet = ""; // Spelare
-        String nHemkortet = ""; // Hem
-
-        // String vem vann
-        String vinnare = "";
-
-        // källa ico image
-        ImageIcon icon = new ImageIcon("src/B_Uppgift/blackjack-card.jpg");
-
-        // SPELAREN
-
-        // kör så länge vill ha flera kort eller total blir över 21
-        while (total <= 21){ // Stopp loop spel slut
-
-        // Dialogruta "Ett kort till?"
+        // SPELARE
+        while (total <= 21){ // spelas tills blir 21 eller avbrott
         int oneCard = JOptionPane.showConfirmDialog(null,
                                                     "<html><b>Ett kort till?</b></html" + nkortet +
                                                     "\n<html><b>" + total + "</b> poäng.</html>",
                                                     rubrik, JOptionPane.YES_NO_OPTION,
                                                     JOptionPane.INFORMATION_MESSAGE, icon);
-        // Ett kort till.
-        if (oneCard != 0 || total <= 21){
-            // Nästan random kort
-            Card varKort = deck.drawRandomCard();
-            // addera resultat till array varvKort
-            kort.add(varKort);
-            // addera resultat till nKoret (Dialogruta meddelande)
+
+            if (oneCard == 1) // Inga flera kort till
+                break;
+            else {
+
+                // Nästan random kort
+                Card varKort = deck.drawRandomCard();
+
+                // addera resultat till array varvKort
+                kort.add(varKort);
+                // addera resultat till nKoret (Dialogruta meddelande)
                 nkortet +=  "\n" + kort.get(varv);
 
-            String z = kort.get(varv).toString();  // Card värde till Sting
-            int mellanslag =  z.indexOf(" "); // index av första mellanslag
-
-            try{ // om det är heltal
-            int kortVarde = Integer.parseInt(z.substring(0, mellanslag));
-            total += kortVarde; // summa kortsvärde poäng
-            } catch (NumberFormatException e) { // Om det är king, Queen eller Jack.
-                String kortVarde = z.substring(0, mellanslag);
-                if (kortVarde.equals("king") || kortVarde.equals("Queen") || kortVarde.equals("Jack")){
-                    total += 10; // summa tio poäng
-                } else if(kortVarde.equals("Ace")){
-                    total++; // summa en poäng
-                } else {
-                    int skillnad = 21 - total; // skillnad till 21
-                    if(skillnad > 10){
-                        total += 10; // summa tio poäng, maximal värde på Jack
-                    } else {
-                        total += skillnad; // summa tills 21, Black Jack
-                    }
-                }
+                tolkaKort(); // tolkning av kort + öka ett varv
+                varv++; // åka varv
             }
-            varv++; // ökning av varv
-
         }
-//        else {
-            // total blev över 21 poäng, avbryt programmet
-//            System.out.println("Inga flera kort");
-//            System.exit(0); // avbryt programmet
-//        }
-        }
-                System.out.println(total);
-            if(total >21){
-                // Dialogruta med resultat och vinnare.
-                JOptionPane.showMessageDialog(null,
-                                              "<html><b>Spelare: </b></html>" + nkortet +
-                                              "\n<html><b>" + total + "</b> poäng.</html>" +
-                                              "Spelet är över, <br> Lycka till nästa gång!",
-                                              rubrik, JOptionPane.INFORMATION_MESSAGE);
-                System.exit(0); // avbryt programmet
-//                JOptionPane.showMessageDialog(null,
-//                                              "<html><b>Spelare: </b></html>" + nkortet +
-//                                              "\n<html><b>" + total + "</b> poäng.</html>" +
-//                                              "Spelet är över, <br> Lycka till nästa gång!",
-//                                              rubrik, JOptionPane.INFORMATION_MESSAGE, icon
-//                );
-                System.out.println("here");
-            }
 
-        // HEM
-
-        // Ett kort till tills hem får fler poäng än spelare eller mer än 17
-        while(total > totalHem && totalHem < 18) {
+        // HUSET
+        // Nyt kort so länge huset int får högre total eller över 17
+            varv = 0; // nollställ räkna varv.
+        while (totalHuset <= 17 && totalHuset < total){
             // Nästan random kort
             Card varKort = deck.drawRandomCard();
+
             // addera resultat till array varvKort
-            kort.add(varKort);
+            kortHuset.add(varKort);
             // addera resultat till nHemkortet (Dialogruta meddelande)
-            nHemkortet += "\n" + kort.get(varv);
+            nHuskortet += "\n" + kortHuset.get(varv);
 
-            String z          = kort.get(varv).toString();  // Card värde till Sting
-            int    mellanslag = z.indexOf(" "); // index av första mellanslag
+            tolkaKortH(); // tolkning av kort + öka ett varv
+            varv++; // åka varv
+        }
 
-            try { // om det är heltal
-                int kortVarde = Integer.parseInt(z.substring(0, mellanslag));
-                totalHem += kortVarde; // summa kortsvärde poäng
-            } catch (NumberFormatException e) { // Om det är king, Queen eller Jack.
-                String kortVarde = z.substring(0, mellanslag);
-                if (kortVarde.equals("king") || kortVarde.equals("Queen") || kortVarde.equals("Jack")) {
-                    totalHem += 10; // summa tio poäng
-                } else if (kortVarde.equals("Ace")) {
-                    totalHem++; // summa en poäng
-                } else {
-                    int skillnad = 21 - totalHem; // skillnad till 21
-                    if (skillnad > 10) {
-                        totalHem += 10; // summa tio poäng, maximal värde på Jack
-                    } else {
-                        totalHem += skillnad; // summa tills 21, Black Jack
-                    }
-                }
-            }
-
-            // Olika meddelande beroende av totalt vs totalHem
-            if (totalHem > 21 && total <= 21) {
-                vinnare = "Hem hade otur <br><b>GRATTIS!</b><br>Du vann!";
-            } else if (total == totalHem || total < totalHem) {
-                vinnare = "Spelet är över, <br> Lycka till nästa gång!";
-            } else {
-                vinnare = "GRATTIS!<br>Du vann!";
-            }
-       }
-        // Dialogruta med resultat och vinnare.
+        // DIALOGRUTA VINNARE
+        if(total >21){ // över poäng huset vinner
         JOptionPane.showMessageDialog(null,
-                                      "<html><b>Spelare: </b></html>" + nkortet +
-                                      "\n<html><b>" + total + "</b> poäng.</html>" +
-                                      "\n\n<html><b>Hem: </html>" + nHemkortet +
-                                      "\n<html><b>" + totalHem + "</b> poäng.</html>\n" +
-                                      "\n<html><b>" + vinnare + "</b></html>",
-                                      rubrik, JOptionPane.INFORMATION_MESSAGE, icon
-        );
+                                      "<html><b>" + total + "</b> poäng." +
+                                      "<br><b>Spelet är över</b>," +
+                                      "<br><br><b>Huset vinner</b>" +
+                                      "<br> <em>Lycka till nästa gång!</em></html>",
+                                      rubrik,
+                                      JOptionPane.INFORMATION_MESSAGE, icon);
+
+        } else { // tid för huset börja spela
+            String meddelande;
+
+            if(totalHuset >= total && totalHuset <= 21){ // Samma poäng elle lika huset vinner
+                meddelande = "huset vinner";
+            } else {
+                meddelande = "Grattis!\n<html>du vann.";
+            }
+
+            // Dialogruta med resultat och vinnare.
+            JOptionPane.showMessageDialog(null,
+                                          "<html><b>Spelare: </b>" + nkortet +
+                                          "\n<html><b>" + total + "</b> poäng." +
+                                          "\n\n<html><b>Huset: </b>" + nHuskortet +
+                                          "\n<html><b>" + totalHuset + "</b> poäng." +
+                                          "\n\n<html><b>" + meddelande + "</b>",
+                                          rubrik, JOptionPane.INFORMATION_MESSAGE, icon);
         }
     }
+
+    private static void tolkaKort() {
+        String str = kort.get(varv).toString();  // Card värde till Sting
+        int mellanslag =  str.indexOf(" "); // index av första mellanslag
+
+        try{ // om det är heltal
+            int kortVarde = Integer.parseInt(str.substring(0, mellanslag));
+            total += kortVarde; // summa kortsvärde poäng
+        } catch (NumberFormatException e) { // Om det är king, Queen eller Jack.
+            String kortVarde = str.substring(0, mellanslag);
+            if (kortVarde.equals("king") || kortVarde.equals("Queen") || kortVarde.equals("Jack")){
+                total += 10; // summa tio poäng
+            } else if(kortVarde.equals("Ace")){
+                total++; // summa en poäng
+            } else {
+                int skillnad = 21 - total; // skillnad till 21
+                if(skillnad > 10){
+                    total += 10; // summa tio poäng, maximal värde på Jack
+                } else {
+                    total += skillnad; // summa tills 21, Black Jack
+                }
+            }
+        }
+        // varv++; // ökning av varv
+    }
+    private static void tolkaKortH() {
+        String str = kortHuset.get(varv).toString();  // Card värde till Sting
+        int mellanslag =  str.indexOf(" "); // index av första mellanslag
+
+        try{ // om det är heltal
+            int kortVarde = Integer.parseInt(str.substring(0, mellanslag));
+            totalHuset += kortVarde; // summa kortsvärde poäng
+        } catch (NumberFormatException e) { // Om det är king, Queen eller Jack.
+            String kortVarde = str.substring(0, mellanslag);
+            if (kortVarde.equals("king") || kortVarde.equals("Queen") || kortVarde.equals("Jack")){
+                totalHuset += 10; // summa tio poäng
+            } else if(kortVarde.equals("Ace")){
+                totalHuset++; // summa en poäng
+            } else {
+                int skillnad = 21 - totalHuset; // skillnad till 21
+                if(skillnad > 10){
+                    totalHuset += 10; // summa tio poäng, maximal värde på Jack
+                } else {
+                    totalHuset += skillnad; // summa tills 21, Black Jack
+                }
+            }
+        }
+    }
+}
