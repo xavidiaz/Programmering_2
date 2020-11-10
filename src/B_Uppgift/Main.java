@@ -113,7 +113,31 @@ public class Main {
             if (kortVarde.equals("king") || kortVarde.equals("Queen") || kortVarde.equals("Jack")){
                 total += 10; // summa tio poäng
             } else if(kortVarde.equals("Ace")){
-                total++; // summa en poäng
+
+                ////
+                // Instansieras ny object JFrame
+                JFrame   frame   = new JFrame();
+
+                // Array med knappar värde
+                String[] options = new String[2];
+                // Instansieras värde element
+                options[0] = new String("Ett"); // return int 0
+                options[1] = new String("14"); // return int 1
+
+                // Dialogruta
+                int value = JOptionPane.showOptionDialog(
+                        frame.getContentPane(),
+                        "Välj värde för Ess",rubrik, 0,
+                        JOptionPane.INFORMATION_MESSAGE,icon,options,null);
+
+                // returnera 1 Värde
+                if(value == 0)
+                    total++; // summa en poäng
+                // returnera 14 värde
+                else
+                    total = total + 14; // summa en poäng
+
+                /////
             } else {
                 int skillnad = 21 - total; // skillnad till 21
                 if(skillnad > 10){
@@ -137,7 +161,12 @@ public class Main {
             if (kortVarde.equals("king") || kortVarde.equals("Queen") || kortVarde.equals("Jack")){
                 totalHuset += 10; // summa tio poäng
             } else if(kortVarde.equals("Ace")){
-                totalHuset++; // summa en poäng
+                int skillnad = 21 - totalHuset; // skillnad till 21
+                if(skillnad >= 14){
+                    totalHuset += 14; // summa tio poäng, maximal värde Ess
+                } else {
+                    totalHuset++; // summa en poäng
+                }
             } else {
                 int skillnad = 21 - totalHuset; // skillnad till 21
                 if(skillnad > 10){
