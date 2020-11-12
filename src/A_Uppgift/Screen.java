@@ -3,7 +3,6 @@ package A_Uppgift;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import java.awt.*;
 import java.awt.event.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ public class Screen extends JDialog {
     private JButton newPerson;
     private JButton newSavePerson;
     private JButton update;
-    private JButton                 cancel;
+    private JButton cancel;
     private JList   listPeople;
     private JTextField name;
     private JTextField surname;
@@ -159,7 +158,6 @@ public class Screen extends JDialog {
 
     private void onSavePerson() {
 
-        try{
             Person p  = new Person(
                     name.getText(),
                     email.getText(),
@@ -177,15 +175,10 @@ public class Screen extends JDialog {
 
             refreshPeopleList();
 
-        } catch (Exception e){
         }
-
-    }
-
 
     private void onUpdate() {
 
-        try{
             int personIndex = listPeople.getSelectedIndex();
             Person p = people.get(personIndex);
 
@@ -216,11 +209,8 @@ public class Screen extends JDialog {
 
             refreshPeopleList();
 
-        } catch (Exception e){
     }
 
-
-    }
 
     private void onValueChanged() {
         // add your code here if necessary
@@ -263,13 +253,6 @@ public class Screen extends JDialog {
 
     }
 
-    public void validateString(JTextField field, JLabel label, String name){
-        if(field.getText().trim().isEmpty()){
-            label.setText("Empty field " + name);
-        }
-    }
-
-
     public static void main(String[] args) {
         Screen dialog = new Screen();
         dialog.pack();
@@ -299,3 +282,4 @@ public class Screen extends JDialog {
         // TODO: place custom component creation code here
     }
 }
+
