@@ -1,16 +1,18 @@
 package A_Uppgift;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
 
 public class Person {
+
+    //Deklarera variabler
     String name;
     String surname;
     String email;
     String phoneNumber;
     LocalDate dateOfBirth;
 
+    // konstruktor
     public Person(String name, String surname, String email, String phoneNumber, LocalDate dateOfBirth) {
         this.name        = name;
         this.surname     = surname;
@@ -18,6 +20,7 @@ public class Person {
         this.phoneNumber = phoneNumber;
         this.dateOfBirth = dateOfBirth;
     }
+    // konstruktor enklare version Polymorfism
     public Person(String name, String surname, String email, String phoneNumber, String dateOfBirth) {
         this.name        = name;
         this.surname        = surname;
@@ -26,6 +29,7 @@ public class Person {
         setDateOfBirth(dateOfBirth);
     }
 
+    // Getters & setters
     public String getName() {
         return name;
     }
@@ -68,9 +72,4 @@ public class Person {
         this.dateOfBirth = LocalDate.parse(dateOfBirth, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     }
 
-    public int getAge(String dateOfBirth) {
-        LocalDate today = LocalDate.now();
-        Period period = Period.between(this.dateOfBirth, today);
-        return period.getYears();
-    }
 }

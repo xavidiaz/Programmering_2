@@ -30,14 +30,17 @@ public class Screen extends JDialog {
     private DefaultListModel  listPeopleModel;
 
     public Screen() {
+        // Instansieras Swing panel
         setContentPane(contentPane);
+
+        // Fönster Beteende
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setModal(true);
         getRootPane().setDefaultButton(newPerson);
 
-        onInit();
+        onInit(); // start modell
 
-        //
+        // Spara kontakt list
         people = new ArrayList<Person>();
         listPeopleModel = new DefaultListModel();
         listPeople.setModel(listPeopleModel);
@@ -78,13 +81,18 @@ public class Screen extends JDialog {
         name.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                //nameError.setText("NameError");
+
+                // Validering
+
+                // mönster
                 String regex = "(^[A-Za-z]{3,16})([ ]{0,1})([A-Za-z]{3,16})?([ ]{0,1})?([A-Za-z]{3,16})?([ ]{0,1})?([A-Za-z]{3,16})";
                 Pattern pattern = Pattern.compile(regex);
-
                 Matcher matcher = pattern.matcher(name.getText());
+
+                // Skrivs fält meddelande i label
                 nameError.setText(email.getText() +" : "+ matcher.matches());
 
+                // a/Aktivera och skriva om knappar och fält beroende av validering och villkor.
                 if(!matcher.matches()){
                     nameError.setText("No valid name");
                     newSavePerson.setEnabled(false);
@@ -97,6 +105,7 @@ public class Screen extends JDialog {
 
             }
         });
+
         KeyAdapter listener = new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -108,15 +117,24 @@ public class Screen extends JDialog {
         birthdayError.addKeyListener(listener);
         telephoneError.addKeyListener(listener);
         emailError.addKeyListener(listener);
+
+        // Validering
+
+        // mönster
         surname.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
+                // Validering
+
+                // mönster
                 String regex = "(^[A-Za-z]{3,16})([ ]{0,1})([A-Za-z]{3,16})?([ ]{0,1})?([A-Za-z]{3,16})?([ ]{0,1})?([A-Za-z]{3,16})";
                 Pattern pattern = Pattern.compile(regex);
-
                 Matcher matcher = pattern.matcher(name.getText());
+
+                // Skrivs fält meddelande i label
                 surNameError.setText(surname.getText() +" : "+ matcher.matches());
 
+                // a/Aktivera och skriva om knappar och fält beroende av validering och villkor.
                 if(!matcher.matches()){
                     surNameError.setText("No valid surname");
                     newSavePerson.setEnabled(false);
@@ -128,17 +146,23 @@ public class Screen extends JDialog {
                 }
             }
         });
+
         birthday.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
+                // Validering
+
+                // mönster
                 String regex = "^(((0[1-9]|[12][0-9]|3[01])[- /.](0[13578]|1[02])|(0[1-9]|[12][0-9]|30)[- /.]" +
                                "(0[469]|11)|(0[1-9]|1\\d|2[0-8])[- /.]02)[- /.]\\d{4}|29[- /.]02[- /.](\\d{2}" +
                                "(0[48]|[2468][048]|[13579][26])|([02468][048]|[1359][26])00))$";
                 Pattern pattern = Pattern.compile(regex);
 
+                // Skrivs fält meddelande i label
                 Matcher matcher = pattern.matcher(birthday.getText());
                 birthdayError.setText(birthday.getText() +" : "+ matcher.matches());
 
+                // a/Aktivera och skriva om knappar och fält beroende av validering och villkor.
                 if(!matcher.matches()){
                     birthdayError.setText("No valid date \nDD/MM/YYYY");
                     newSavePerson.setEnabled(false);
@@ -153,13 +177,18 @@ public class Screen extends JDialog {
         email.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
+                // Validering
+
+                // mönster
                 String regex = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9]" +
                                "(?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
                 Pattern pattern = Pattern.compile(regex);
-
                 Matcher matcher = pattern.matcher(email.getText());
+
+                // Skrivs fält meddelande i label
                 emailError.setText(email.getText() +" : "+ matcher.matches());
 
+                // a/Aktivera och skriva om knappar och fält beroende av validering och villkor.
                 if(!matcher.matches()){
                     emailError.setText("No valid e-mail \nname@exemple.com");
                     newSavePerson.setEnabled(false);
@@ -174,13 +203,17 @@ public class Screen extends JDialog {
         tel.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
+                // Validering
 
+                // mönster
                 String regex = "^\\+(?:[0-9] ?){6,14}[0-9]$";
                 Pattern pattern = Pattern.compile(regex);
-
                 Matcher matcher = pattern.matcher(tel.getText());
+
+                // Skrivs fält meddelande i label
                 telephoneError.setText(tel.getText() +" : "+ matcher.matches());
 
+                // a/Aktivera och skriva om knappar och fält beroende av validering och villkor.
                 if(!matcher.matches()){
                     telephoneError.setText("No valid telephone \n+45 72 543 4353");
                     newSavePerson.setEnabled(false);
@@ -194,6 +227,7 @@ public class Screen extends JDialog {
         });
     }
 
+    // Beteende beroende av Listeners
     private void onCancel() {
         // buttons status
         update.setEnabled(false);
@@ -319,7 +353,6 @@ public class Screen extends JDialog {
     }
 
     private void onValueChanged() {
-        // add your code here if necessary
         int personIndex = listPeople.getSelectedIndex();
         if (personIndex >=0){
             Person p = people.get(personIndex);
