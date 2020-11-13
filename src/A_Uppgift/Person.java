@@ -6,18 +6,21 @@ import java.time.format.DateTimeFormatter;
 
 public class Person {
     String name;
+    String surname;
     String email;
     String phoneNumber;
     LocalDate dateOfBirth;
 
-    public Person(String name, String email, String phoneNumber, LocalDate dateOfBirth) {
+    public Person(String name, String surname, String email, String phoneNumber, LocalDate dateOfBirth) {
         this.name        = name;
+        this.surname     = surname;
         this.email       = email;
         this.phoneNumber = phoneNumber;
         this.dateOfBirth = dateOfBirth;
     }
-    public Person(String name, String email, String phoneNumber, String dateOfBirth) {
+    public Person(String name, String surname, String email, String phoneNumber, String dateOfBirth) {
         this.name        = name;
+        this.surname        = surname;
         this.email       = email;
         this.phoneNumber = phoneNumber;
         setDateOfBirth(dateOfBirth);
@@ -26,9 +29,15 @@ public class Person {
     public String getName() {
         return name;
     }
+    public String getSurname() {
+        return surname;
+    }
 
     public void setName(String name) {
         this.name = name;
+    }
+    public void setSurname(String surname) {
+        this.surname = surname;
     }
 
     public String getEmail() {

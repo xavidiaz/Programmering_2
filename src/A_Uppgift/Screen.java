@@ -6,6 +6,8 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.event.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Screen extends JDialog {
     private JPanel  contentPane;
@@ -29,7 +31,7 @@ public class Screen extends JDialog {
 
     public Screen() {
         setContentPane(contentPane);
-        //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setModal(true);
         getRootPane().setDefaultButton(newPerson);
 
@@ -48,13 +50,6 @@ public class Screen extends JDialog {
             public void actionPerformed(ActionEvent e) {onUpdate();}
         });
 
-        // call onUpdate() when cross is clicked
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                onUpdate();
-            }
-        });
 
         // call onUpdate() on ESCAPE
         contentPane.registerKeyboardAction(new ActionListener() {
@@ -83,7 +78,118 @@ public class Screen extends JDialog {
         name.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                nameError.setText("NameError");
+                //nameError.setText("NameError");
+                String regex = "(^[A-Za-z]{3,16})([ ]{0,1})([A-Za-z]{3,16})?([ ]{0,1})?([A-Za-z]{3,16})?([ ]{0,1})?([A-Za-z]{3,16})";
+                Pattern pattern = Pattern.compile(regex);
+
+                Matcher matcher = pattern.matcher(name.getText());
+                nameError.setText(email.getText() +" : "+ matcher.matches());
+
+                if(!matcher.matches()){
+                    nameError.setText("No valid name");
+                    newSavePerson.setEnabled(false);
+                    newSavePerson.setEnabled(false);
+                }else {
+                    nameError.setText("");
+                    newSavePerson.setEnabled(true);
+                    newSavePerson.setEnabled(true);
+                }
+
+            }
+        });
+        KeyAdapter listener = new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                super.keyTyped(e);
+            }
+        };
+        nameError.addKeyListener(listener);
+        surNameError.addKeyListener(listener);
+        birthdayError.addKeyListener(listener);
+        telephoneError.addKeyListener(listener);
+        emailError.addKeyListener(listener);
+        surname.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                String regex = "(^[A-Za-z]{3,16})([ ]{0,1})([A-Za-z]{3,16})?([ ]{0,1})?([A-Za-z]{3,16})?([ ]{0,1})?([A-Za-z]{3,16})";
+                Pattern pattern = Pattern.compile(regex);
+
+                Matcher matcher = pattern.matcher(name.getText());
+                surNameError.setText(surname.getText() +" : "+ matcher.matches());
+
+                if(!matcher.matches()){
+                    surNameError.setText("No valid surname");
+                    newSavePerson.setEnabled(false);
+                    newSavePerson.setEnabled(false);
+                }else {
+                    surNameError.setText("");
+                    newSavePerson.setEnabled(true);
+                    newSavePerson.setEnabled(true);
+                }
+            }
+        });
+        birthday.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                String regex = "^(((0[1-9]|[12][0-9]|3[01])[- /.](0[13578]|1[02])|(0[1-9]|[12][0-9]|30)[- /.]" +
+                               "(0[469]|11)|(0[1-9]|1\\d|2[0-8])[- /.]02)[- /.]\\d{4}|29[- /.]02[- /.](\\d{2}" +
+                               "(0[48]|[2468][048]|[13579][26])|([02468][048]|[1359][26])00))$";
+                Pattern pattern = Pattern.compile(regex);
+
+                Matcher matcher = pattern.matcher(birthday.getText());
+                birthdayError.setText(birthday.getText() +" : "+ matcher.matches());
+
+                if(!matcher.matches()){
+                    birthdayError.setText("No valid date \nDD/MM/YYYY");
+                    newSavePerson.setEnabled(false);
+                    newSavePerson.setEnabled(false);
+                }else {
+                    birthday.setText("");
+                    newSavePerson.setEnabled(true);
+                    newSavePerson.setEnabled(true);
+                }
+            }
+        });
+        email.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                String regex = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9]" +
+                               "(?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
+                Pattern pattern = Pattern.compile(regex);
+
+                Matcher matcher = pattern.matcher(email.getText());
+                emailError.setText(email.getText() +" : "+ matcher.matches());
+
+                if(!matcher.matches()){
+                    emailError.setText("No valid e-mail \nname@exemple.com");
+                    newSavePerson.setEnabled(false);
+                    newSavePerson.setEnabled(false);
+                }else {
+                    emailError.setText("");
+                    newSavePerson.setEnabled(true);
+                    newSavePerson.setEnabled(true);
+                }
+            }
+        });
+        tel.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+                String regex = "^\\+(?:[0-9] ?){6,14}[0-9]$";
+                Pattern pattern = Pattern.compile(regex);
+
+                Matcher matcher = pattern.matcher(tel.getText());
+                telephoneError.setText(tel.getText() +" : "+ matcher.matches());
+
+                if(!matcher.matches()){
+                    telephoneError.setText("No valid telephone \n+45 72 543 4353");
+                    newSavePerson.setEnabled(false);
+                    newSavePerson.setEnabled(false);
+                }else {
+                    telephoneError.setText("");
+                    newSavePerson.setEnabled(true);
+                    newSavePerson.setEnabled(true);
+                }
             }
         });
     }
@@ -104,6 +210,7 @@ public class Screen extends JDialog {
 
         // fields set text
         name.setText("! New/Select");
+        surname.setText("! New/Select");
         email.setText("! New/Select");
         tel.setText("! New/Select");
         birthday.setText("! New/Select");
@@ -137,7 +244,6 @@ public class Screen extends JDialog {
         newSavePerson.setEnabled(true);
         cancel.setEnabled(true);
 
-
         // text fields
         name.setText("");
         email.setText("");
@@ -153,13 +259,13 @@ public class Screen extends JDialog {
 
         refreshPeopleList();
 
-
     }
 
     private void onSavePerson() {
 
             Person p  = new Person(
                     name.getText(),
+                    surname.getText(),
                     email.getText(),
                     tel.getText(),
                     birthday.getText()
@@ -174,7 +280,6 @@ public class Screen extends JDialog {
         tel.setEnabled(false);
 
             refreshPeopleList();
-
         }
 
     private void onUpdate() {
@@ -183,6 +288,7 @@ public class Screen extends JDialog {
             Person p = people.get(personIndex);
 
             p.setName(name.getText());
+            p.setName(surname.getText());
             p.setEmail(email.getText());
             p.setPhoneNumber(tel.getText());
             System.out.println("tel: " + tel.getText());
@@ -190,6 +296,7 @@ public class Screen extends JDialog {
 
             // text fields
             name.setText("");
+            surname.setText("");
             email.setText("");
             tel.setText("");
             birthday.setText("");
@@ -211,13 +318,13 @@ public class Screen extends JDialog {
 
     }
 
-
     private void onValueChanged() {
         // add your code here if necessary
         int personIndex = listPeople.getSelectedIndex();
         if (personIndex >=0){
             Person p = people.get(personIndex);
             name.setText(p.getName());
+            surname.setText(p.getName());
             email.setText(p.getEmail());
             tel.setText(p.getPhoneNumber());
             birthday.setText(p.getDateOfBirth().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
@@ -235,6 +342,9 @@ public class Screen extends JDialog {
             email.setEnabled(true);
             tel.setEnabled(true);
 
+            // clean error validation
+            birthdayError.setText("");
+
         }
     }
 
@@ -247,8 +357,7 @@ public class Screen extends JDialog {
     private void refreshPeopleList() {
        listPeopleModel.removeAllElements();
        for(Person p:people){
-           System.out.println("Adding person to list: " + p.getName());
-           listPeopleModel.addElement(p.getName());
+           listPeopleModel.addElement(p.getName() + ", " + p.getSurname());
        }
 
     }
@@ -258,13 +367,13 @@ public class Screen extends JDialog {
         dialog.pack();
 
         // dump Persons
-        Person sheldon = new Person("Sheldon Lee Cooper", "sheldon@gmail.com", "555 0001", "26/02/1980");
-        Person howard = new Person("Howard Joel Wolowitz", "howard@gmail.com", "555 0002", "01/03/1981");
-        Person bernadette = new Person("Bernadette Rostenkowski-Wolowitz", "bernadette@gmail.com", "555 0002", "01/01/1984");
-        Person raj = new Person("Rajesh Ramayan Koothrappali", "raj@gmail.com", "555 0003", "06/10/1981");
-        Person penny = new Person("Penny Hofstadter", "penny@gmail.com", "555 0004", "02/12/1985");
-        Person leonard = new Person("Leonard Hofstadter", "leonard@gmail.com", "555 0004", "17/05/1980");
-        Person amy = new Person("Amy Farrah Fowler", "amy@gmail.com", "555 0005", "17/12/1979");
+        Person sheldon = new Person("Sheldon", "Lee Cooper", "sheldon@gmail.com", "555 0001", "26/02/1980");
+        Person howard = new Person("Howard", "Joel Wolowitz", "howard@gmail.com", "555 0002", "01/03/1981");
+        Person bernadette = new Person("Bernadette", "Rostenkowski-Wolowitz", "bernadette@gmail.com", "555 0002", "01/01/1984");
+        Person raj = new Person("Rajesh", "Ramayan Koothrappali", "raj@gmail.com", "555 0003", "06/10/1981");
+        Person penny = new Person("Penny", "Hofstadter", "penny@gmail.com", "555 0004", "02/12/1985");
+        Person leonard = new Person("Leonard", "Hofstadter", "leonard@gmail.com", "555 0004", "17/05/1980");
+        Person amy = new Person("Amy", "Farrah Fowler", "amy@gmail.com", "555 0005", "17/12/1979");
 
         dialog.addPerson(sheldon);
         dialog.addPerson(howard);
@@ -274,12 +383,10 @@ public class Screen extends JDialog {
         dialog.addPerson(leonard);
         dialog.addPerson(amy);
 
+
         dialog.setVisible(true);
         System.exit(0);
     }
 
-    private void createUIComponents() {
-        // TODO: place custom component creation code here
-    }
 }
 
